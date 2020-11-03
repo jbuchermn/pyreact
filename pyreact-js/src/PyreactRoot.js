@@ -1,7 +1,5 @@
 import React from 'react'
 
-import App from './App';
-
 const connect = (onMessage, initialMsg) => {
     let socket = new WebSocket("ws://localhost:8081");
 
@@ -50,16 +48,18 @@ export default class PyreactRoot extends React.Component {
     constructor(props) {
         super(props);
         this.state = { props: {} };
+    }
 
-        setTimeout(() => connect((msg, send) => {
+    componentDidMount(){
+        connect((msg, send) => {
             let props = unwrap(msg.props, send);
             console.log("[pyreact-root]", props)
             this.setState({props});
 
-        }, {'__pyreact_kind': 'request_render'}), 10);
+        }, {'__pyreact_kind': 'request_render'});
     }
 
     render() {
-        return (<App {...this.state.props} />)
+        return this.props.children(this.state.props);
     }
 }

@@ -5,10 +5,17 @@ from abc import abstractmethod
 
 SOCKET_PORT = 8081
 
+async def _run(cmd):
+    proc = await asyncio.create_subprocess_shell(
+        cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
 
-class App:
-    def __init__(self, event_loop):
-        self._event_loop = event_loop
+    await proc.communicate()
+
+
+class PyReactApp:
+    def __init__(self, js_path=None, event_loop=asyncio.get_event_loop()):
         self._client_socket = None
 
         self._funcs = {}
@@ -16,6 +23,10 @@ class App:
 
         server = websockets.serve(self._socket_handler, "0.0.0.0", SOCKET_PORT)
         event_loop.run_until_complete(server)
+
+        if js_path is not None:
+            event_loop.create_task(_run("cd \"%s\" && npm run start" % js_path))
+
 
     async def _socket_handler(self, client_socket, path):
         self._client_socket = client_socket
@@ -78,33 +89,3 @@ class App:
     def _render(self):
         pass
 
-
-class DummyData:
-    def __init__(self, counter):
-        self.counter = 0
-
-    def inc(self):
-        self.counter += 1
-
-    def dec(self):
-        self.counter -= 1
-
-
-class AppImpl(App):
-    def __init__(self, event_loop):
-        super().__init__(event_loop)
-        self.dummy = DummyData(0)
-
-    def _render(self):
-        return {
-            'dummy': self.dummy,
-        }
-
-
-if __name__ == '__main__':
-    try:
-        server = AppImpl(asyncio.get_event_loop())
-        asyncio.get_event_loop().run_forever()
-
-    except Exception as e:
-        print(e)
