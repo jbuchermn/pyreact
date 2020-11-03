@@ -14,7 +14,7 @@ class DummyData:
 
 class AppImpl(PyReactApp):
     def __init__(self):
-        super().__init__("./pyreact-js/example")
+        super().__init__("./example")
         self.dummy = DummyData(0)
 
     def _render(self):
