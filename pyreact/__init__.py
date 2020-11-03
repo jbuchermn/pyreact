@@ -1,1 +1,1 @@
-from .pyreact_app import PyReactApp
+from .pyreact_app import PyreactApp
