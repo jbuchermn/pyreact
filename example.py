@@ -1,5 +1,5 @@
 import asyncio
-from pyreact import PyReactApp
+from pyreact import PyreactApp
 
 class DummyData:
     def __init__(self, counter):
@@ -12,7 +12,7 @@ class DummyData:
         self.counter -= 1
 
 
-class AppImpl(PyReactApp):
+class AppImpl(PyreactApp):
     def __init__(self):
         super().__init__("./example")
         self.dummy = DummyData(0)

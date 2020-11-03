@@ -14,7 +14,7 @@ async def _run(cmd):
     await proc.communicate()
 
 
-class PyReactApp:
+class PyreactApp:
     def __init__(self, js_path=None, event_loop=asyncio.get_event_loop()):
         self._client_socket = None
 
