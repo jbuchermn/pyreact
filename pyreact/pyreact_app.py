@@ -34,12 +34,18 @@ class PyreactApp:
             print("[debug] %s" % msg)
             result = self._process(json.loads(msg))
             if result is not None:
-                await self._client_socket.send(json.dumps(result))
+                try:
+                    await self._client_socket.send(json.dumps(result))
+                except:
+                    pass
 
     async def render(self):
         result = self._process({})
         if result is not None and self._client_socket is not None:
-            await self._client_socket.send(json.dumps(result))
+            try:
+                await self._client_socket.send(json.dumps(result))
+            except:
+                pass
 
     def _wrap(self, py_obj):
         if callable(py_obj):
