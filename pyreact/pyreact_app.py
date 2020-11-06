@@ -15,7 +15,7 @@ async def _run(cmd):
 
 
 class PyreactApp:
-    def __init__(self, js_path=None, event_loop=asyncio.get_event_loop()):
+    def __init__(self, js_debug_path=None, event_loop=asyncio.get_event_loop()):
         self._client_socket = None
 
         self._funcs = {}
@@ -25,7 +25,7 @@ class PyreactApp:
         event_loop.run_until_complete(server)
 
         if js_path is not None:
-            event_loop.create_task(_run("cd \"%s\" && npm run start" % js_path))
+            event_loop.create_task(_run("cd \"%s\" && npm run start" % js_debug_path))
 
 
     async def _socket_handler(self, client_socket, path):

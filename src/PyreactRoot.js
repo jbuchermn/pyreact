@@ -1,7 +1,7 @@
 import React from 'react'
 
-const connect = (onMessage, initialMsg) => {
-    let socket = new WebSocket("ws://localhost:8081");
+const connect = (port, onMessage, initialMsg) => {
+    let socket = new WebSocket("ws://" + location.hostname + ":" + port);
 
     socket.onopen = (_) => {
         console.log("[ws:open] Connection established");
@@ -15,7 +15,7 @@ const connect = (onMessage, initialMsg) => {
 
     socket.onclose = (_) => {
         console.log('[ws:close] Connection closed... reconnecting...');
-        setTimeout(() => connect(onMessage, initialMsg), 200);
+        setTimeout(() => connect(port, onMessage, initialMsg), 200);
     };
 
     socket.onerror = (error) => {
@@ -51,7 +51,7 @@ export default class PyreactRoot extends React.Component {
     }
 
     componentDidMount(){
-        connect((msg, send) => {
+        connect(this.props.port || 8081, (msg, send) => {
             let props = unwrap(msg.props, send);
             console.log("[pyreact-root]", props)
             this.setState({props});
